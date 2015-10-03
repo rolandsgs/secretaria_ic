@@ -23,6 +23,22 @@ void draw_wall(float x1,float y1, float z1,
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+void draw_door(float x1,float y1, float z1,
+			float x2, float y2, float z2,
+			float x3, float y3, float z3,
+			float x4, float y4, float z4, int tex_index){
+
+	glBindTexture(GL_TEXTURE_2D, texture_id[tex_index]);
+  glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f( x1, y1, z1 );
+    glTexCoord2f(1.0f, 0.0f); glVertex3f( x2, y2, z2 );
+    glTexCoord2f(1.0f, 1.0f); glVertex3f( x3, y3, z3 );
+    glTexCoord2f(0.0f, 1.0f); glVertex3f( x4, y4, z4 );
+  glEnd();
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+
 void draw(float xpos, float ypos, float zpos,
 			  float esp, float alt, float larg,
 			  float tam, int wire){
@@ -71,77 +87,90 @@ void display(){
 
   gluLookAt(cam[0],cam[1],cam[2],center[0],center[1],center[2],0.0,1.0,0.0);
 
-  draw(0,0,0,18,7,10,5,1);
+  draw(0,0,0,22,10,10,5,1);
 
 
   glColor3f(0.9f, 0.9f, 0.9f);
-  draw_wall(-45,18,-25,
-      -45,18,25,
-      45,18,25,
-      45,18,-25,0);
+  draw_wall(-55,25,-25,
+      -55,25,25,
+      55,25,25,
+      55,25,-25,0);
 
   //chao
-  draw_wall(-45.0f, -17.0f, -25.0f,
-      -45.0f, -17.0f,  25.0f,
-      45.0f, -17.0f,  25.0f,
-      45.0f, -17.0f, -25.0f,1);
+  draw_wall(-55.0f, -25, -25.0f,
+      -55.0f, -25,  25.0f,
+      55.0f, -25,  25.0f,
+      55.0f, -25, -25.0f,1);
 
 
   //parede atras da estante
-  draw_wall(-45, -18, 10.0f,
-    -45, 18.1f,  10.0f,
-    -45, 18.1f,  -25.0f,
-      -45, -18, -25.0f,0);
+  draw_wall(-55, -25, 10.0f,
+    -55, 25.1f,  10.0f,
+    -55, 25.1f,  -25.0f,
+      -55, -25, -25.0f,0);
 
-  draw_wall(-45, 18.1, 25.0f,
-      -45, 12.0f,  25.0f,
-      -45, 12.0f,  10.0f,
-      -45, 18.1, 10.0f,0);
+  draw_wall(-55, 25.1, 25.0f,
+      -55, 20.0f,  25.0f,
+      -55, 20.0f,  10.0f,
+      -55, 25.1, 10.0f,0);
 
   // parede embaixo da janela
-  draw_wall(-22, -2,  -25.0f,
-       29, -2,  -25.0f,
-       29, -17, -25.0f,
-      -22, -17, -25.0f,0);
+  draw_wall(-32, -5,  -25.0f,
+       35, -5,  -25.0f,
+       35, -25, -25.0f,
+      -32, -25, -25.0f,0);
 
   //parede em cima da janela
-  draw_wall(-45, 18,  -25.0f,
-       45, 18,  -25.0f,
-       45, 13.5, -25.0f,
-      -45, 13.5, -25.0f,0);
+  draw_wall(-55, 25,  -25.0f,
+       55, 25,  -25.0f,
+       55, 20.5, -25.0f,
+      -55, 20.5, -25.0f,0);
 
-  //parede ao lado da janela
-  draw_wall(-45.5, -18,  -25.0f,
-      -38, -18,  -25.0f,
-      -38, 13.5, -25.0f,
-      -45.5, 13.5, -25.0f,0);
+// parede ao lado da porta principal
+	draw_wall(50, 25,  -25.0f,
+			 55, 25,  -25.0f,
+			 55, -25, -25.0f,
+			50, -25, -25.0f,0);
 
-  //parede atras das duas portas
-  draw_wall(45.5, 13.3,  25.0f,
-      -45, 13.3,  25.0f,
-      -45, 18, 25.0f,
-      45.5, 18, 25.0f,0);
+  //parede ao lado da porta secundaria
+  draw_wall(-55, -25,  -25.0f,
+      -48, -25,  -25.0f,
+      -48, 20.5, -25.0f,
+      -55, 20.5, -25.0f,0);
 
-  draw_wall(-27, 13.3,  25.0f,
-      2, 13.3,  25.0f,
-      2, -17, 25.0f,
-      -27, -17, 25.0f,0);
+  //parede acima das duas portas do fundo
+  draw_wall(55.5, 20.3,  25.0f,
+      -55, 20.3,  25.0f,
+      -55, 25, 25.0f,
+      55.5, 25, 25.0f,0);
 
-  draw_wall(45, 13.5,  25.0f,
-      18, 13.5,  25.0f,
-      18, -17, 25.0f,
-      45, -17, 25.0f,0);
+	//parede entre as duas portas
+  draw_wall(-35, 20.3,  25.0f,
+      12, 20.3,  25.0f,
+      12, -25, 25.0f,
+      -35, -25, 25.0f,0);
+
+	// parede entre a porta coordenacao e a porta ao lado da estante
+	draw_wall(-50, 20.3,  25.0f,
+      -55, 20.3,  25.0f,
+      -55, -25, 25.0f,
+      -50, -25, 25.0f,0);
+
+  draw_wall(55, 20.5,  25.0f,
+      28, 20.5,  25.0f,
+      28, -24, 25.0f,
+      55, -24, 25.0f,0);
 
   //parede em cima das janelas externas
-  draw_wall(45.2f, 18.2, -25.2f,
-      45.2f, 13.5f,  -25.2f,
-      45.2f, 13.5f,  25.0f,
-      45.2f, 18.2, 25.0f,0);
+  draw_wall(55.2f, 25.2, -25.2f,
+      55.2f, 20.5f,  -25.2f,
+      55.2f, 20.5f,  25.0f,
+      55.2f, 25.2, 25.0f,0);
 
-  draw_wall(45.2f, -17, -25.2f,
-      45.2f, 13.5f,  -25.2f,
-      45.2f, 13.5f,  -20.0f,
-      45.2f, -17, -20.0f,0);
+  draw_wall(55.2f, -24, -25.2f,
+      55.2f, 20.5f,  -25.2f,
+      55.2f, 20.5f,  -20.0f,
+      55.2f, -24, -20.0f,0);
 
       //balcao
       int cont, cont1 = 0;
@@ -180,9 +209,9 @@ void display(){
     glColor3f(1,1,1);
 
     //janelas externas - maiores
-      draw(45,-2,-14,0.01,6,3,5,1);
-      draw(45,-2,1,0.01,6,3,5, 1);
-      draw(45,-2,16,0.01,6,3,5,1);
+      draw(55,-4,-14, 0.01,8,3,5,1);
+      draw(55,-4,1,   0.01,8,3,5, 1);
+      draw(55,-4,16,  0.01,8,3,5,1);
 
       //janelas externas - menores
     draw(23,5.7,-25,2.5,3,0.01,5,1);
@@ -192,18 +221,41 @@ void display(){
 
     // porta principal
     glPushMatrix();
-      glColor3f(1,0,0);
-      glTranslatef(30,-2,-25);
-      glRotated((GLfloat)door_angle,0,1,0);
-      draw(7,0,0,3,6,0.01,5,0);
+      //glColor3f(1,0,0);
+      glTranslatef(50,-6,-25);
+      glRotated((GLfloat)door_angle,0,-1,0);
+      //draw(-7,0,0,3,7.5,0.01,5,0);
+			draw_door(-15, -19,  0,
+		            0,  -19,   0,
+		            0,   20,   0,
+		            -15, 20,  0,2);
     glPopMatrix();
 
-    // outras portas
-    glColor3f(0.1,0.3,0.8);
-    draw(-45.5,-2,17.5,0.01,6.1,3.2,5,0);
-    draw(10,-2,25,3.2,6.1,0.01,5,0);
-    draw(-36,-2,25,3.6,6.1,0.01,5,0);
-    draw(-30,-2,-25,3.2,6,0.01,5,0);
+	// porta ao lado da estante
+	draw_door(-55, -25, 10.0f,
+            -55,  15,  10,
+    	 	    -55,  15,  25.0f,
+      		  -55, -25,  25.0f,3);
+
+	//porta coordenacao
+	 draw_door(-35,  -25,25,
+						-50,  -25, 25,
+						-50,   15, 25,
+						-35,   15, 25,2);
+
+	//porta diretor
+	 draw_door(12,  -25,25,
+						28,  -25, 25,
+						28,   15, 25,
+						12,   15, 25,2);
+
+		// porta secundaria
+		draw_door(-32,  -25, -25,
+							-48,  -25, -25,
+							-48,   15, -25,
+							-32,   15, -25,2);
+
+  //  draw(-30,-2,-25,3.2,6,0.01,5,0);
 
     //biros
     glColor3f(1,1,1);
@@ -379,6 +431,8 @@ void init_textures(){
 
 		loadTextureFromFile("textures/wall.jpg",0);
 		loadTextureFromFile("textures/FloorTiles2.jpg",1);
+		loadTextureFromFile("textures/texture_door.jpg",2);
+		loadTextureFromFile("textures/texture_door1.jpg",3);
 
 }
 

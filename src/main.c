@@ -35,6 +35,7 @@ void gl_initialization(){
   glClearColor(0,0,0,0);
   glEnable(GL_DEPTH_TEST); // VER SIGNIFICADO
   glEnable(GL_TEXTURE_2D);
+  glShadeModel(GL_SMOOTH);
 }
 
 void initialization(){
