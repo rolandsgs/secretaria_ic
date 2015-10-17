@@ -7,6 +7,22 @@ GLfloat tetayz=5;
 GLfloat raioxz=50;
 GLuint texture_id[NUM_TEX];
 int door_angle = 0;
+GLfloat posicao_luz0[]    = { 10, 25 , 0.0, 1.0};
+GLfloat cor_luz0[]        = { 1.0, 1.0, 1.0, 1.0};
+GLfloat luz_ambiente[]    = { 0.2, 0.2, 0.2, 0.2};
+
+GLfloat posicao_luz1[]    = { -23, 25	, 0.0, 1.0};
+GLfloat cor_luz1[]        = { 1.0, 1.0, 1.0, 1.0};
+GLfloat direcao_luz1[]    = { 0.0, 0, -1.0 , 1.0};
+GLint   spot_luz1         = 180;
+GLfloat spot_brilho[]    = {2};
+
+GLfloat sem_cor[]         = { 0.0, 0.0, 0.0, 1.0};
+
+// Capacidade de brilho do material
+GLfloat especularidade[4] = {1.0,1.0,1.0,1.0};
+GLint especMaterial = 30;
+
 
 void draw_wall(float x1,float y1, float z1,
 			float x2, float y2, float z2,
@@ -15,6 +31,7 @@ void draw_wall(float x1,float y1, float z1,
 
 	glBindTexture(GL_TEXTURE_2D, texture_id[tex_index]);
   glBegin(GL_QUADS);
+		glNormal3f(0,1,0);
     glTexCoord2f(0.0f, 0.0f); glVertex3f( x1, y1, z1 );
     glTexCoord2f(1.0f, 0.0f); glVertex3f( x2, y2, z2 );
     glTexCoord2f(1.0f, 1.0f); glVertex3f( x3, y3, z3 );
@@ -30,6 +47,7 @@ void draw_door(float x1,float y1, float z1,
 
 	glBindTexture(GL_TEXTURE_2D, texture_id[tex_index]);
   glBegin(GL_QUADS);
+		glNormal3f(0,1,0);
     glTexCoord2f(0.0f, 0.0f); glVertex3f( x1, y1, z1 );
     glTexCoord2f(1.0f, 0.0f); glVertex3f( x2, y2, z2 );
     glTexCoord2f(1.0f, 1.0f); glVertex3f( x3, y3, z3 );
@@ -44,6 +62,7 @@ void draw(float xpos, float ypos, float zpos,
 			  float tam, int wire){
 
 	glPushMatrix();
+			glNormal3f(0,1,0);
 	    glTranslatef (xpos, ypos, zpos);
 	    glScalef (esp, alt, larg);
 	    if(wire)
@@ -53,209 +72,307 @@ void draw(float xpos, float ypos, float zpos,
     glPopMatrix();
 }
 
-void draw_tv(){
-        glColor3f(0.5, 0.5, 0.5);
-        glPushMatrix();
-        //tras/frente - cima/baixo - direita/esquerda
-        glTranslatef (34, 8 , 24.7);
-        glRotated(90,0,1,0);
-        //espessura, altura, lrgura
-        glScalef (0.08, 2, 3.3);
-        glutSolidCube (5.0);
-        glPopMatrix();
+void draw_windows(float x1,float y1, float z1,
+			float x2, float y2, float z2,
+			float x3, float y3, float z3,
+			float x4, float y4, float z4){
 
-        glColor3f(0, 0, 0);
-        glPushMatrix();
-        //tras/frente - cima/baixo - direita/esquerda
-        glTranslatef (34, 8 , 24.5);
-        //espessura, altura, lrgura
-        glRotated(90,0,1,0);
-        glScalef (0.08, 1.8, 3);
-        glutSolidCube (5.0);
-        glPopMatrix();
+   glBegin(GL_QUADS);
+			glColor4f(1.0f, 1.0f, 1.0f, 0.3f);
+		  glVertex3f( x1, y1, z1 );
+	    glVertex3f( x2, y2, z2 );
+	    glVertex3f( x3, y3, z3 );
+	    glVertex3f( x4, y4, z4 );
+		glEnd();
+
+
+}
+
+void draw_tv(){
+
+	        glPushMatrix();
+						glNormal3f(0,1,0);
+		        //tras/frente - cima/baixo - direita/esquerda
+		        glTranslatef (34, 8 , 24.7);
+		        glRotated(90,0,1,0);
+		        //espessura, altura, lrgura
+		        glScalef (0.08, 2, 3.3);
+		        glutSolidCube (5.0);
+	        glPopMatrix();
+
+	        glPushMatrix();
+		        //tras/frente - cima/baixo - direita/esquerda
+		        glTranslatef (34, 8 , 24.5);
+		        //espessura, altura, lrgura
+		        glRotated(90,0,1,0);
+		        glScalef (0.08, 1.8, 3);
+		        glutSolidCube (5.0);
+	        glPopMatrix();
+
 }
 
 void display(){
 
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
+  glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
   cam[0]=raioxz*cos(2*PI*tetaxz/360);
   cam[2]=raioxz*sin(2*PI*tetaxz/360);
 
-	//printf("%d %d %d\n", center[0], center[1], center[2]);
-
   gluLookAt(cam[0],cam[1],cam[2],center[0],center[1],center[2],0.0,1.0,0.0);
 
-  draw(0,0,0,22,10,10,5,1);
+	init_lighting();
+
+	//lampada
+	glPushMatrix();
+	glColor3f(1,1,1);
+	glBegin(GL_QUADS);
+		glMaterialfv(GL_FRONT, GL_EMISSION, cor_luz1);
+		glVertex3f( -23, 24.5, -9 );
+		glVertex3f( -24, 24.5, -9 );
+		glVertex3f( -24, 24.5, 10 );
+		glVertex3f( -23, 24.5, 10 );
+	glEnd();
+	glPopMatrix();
 
 
+	glPushMatrix();
+	glColor3f(1,1,1);
+	glBegin(GL_QUADS);
+		glVertex3f( 10, 24.5, -9 );
+		glVertex3f( 11, 24.5, -9 );
+		glVertex3f( 11, 24.5, 10 );
+		glVertex3f( 10, 24.5, 10 );
+		glMaterialfv(GL_FRONT, GL_EMISSION, sem_cor);
+	glEnd();
+	glPopMatrix();
   glColor3f(0.9f, 0.9f, 0.9f);
-  draw_wall(-55,25,-25,
-      -55,25,25,
-      55,25,25,
-      55,25,-25,0);
+
+	//TETO
+  draw_wall(-70,25,-25,
+      -70,25,25,
+      70,25,25,
+      70,25,-25,0);
+
+	// divisoria do teto
+	draw_wall(-17,25,-25,
+		      -17,25,   25,
+		      -17,21,   25,
+		      -17,21,-25,0);
+
+	draw_wall(-19,21,-25,
+		       -19, 21,  25,
+		       -19, 25,  25,
+		       -19, 25, -25,0);
+
+	 draw_wall(-17, 21,-25,
+			       -17, 21,  25,
+			       -19,21,  25,
+			       -19,21, -25,0);
 
   //chao
-  draw_wall(-55.0f, -25, -25.0f,
-      -55.0f, -25,  25.0f,
-      55.0f, -25,  25.0f,
-      55.0f, -25, -25.0f,1);
+  draw_wall(-70.0f, -25, -25.0f,
+      -70.0f, -25,  25.0f,
+      70.0f, -25,  25.0f,
+      70.0f, -25, -25.0f,1);
 
 
   //parede atras da estante
-  draw_wall(-55, -25, 10.0f,
-    -55, 25.1f,  10.0f,
-    -55, 25.1f,  -25.0f,
-      -55, -25, -25.0f,0);
+  draw_wall(-70, -25, 10.0f,
+    -70, 25.1f,  10.0f,
+    -70, 25.1f,  -25.0f,
+      -70, -25, -25.0f,0);
 
-  draw_wall(-55, 25.1, 25.0f,
-      -55, 20.0f,  25.0f,
-      -55, 20.0f,  10.0f,
-      -55, 25.1, 10.0f,0);
+  draw_wall(-70, 25.1, 25.0f,
+      -70, 20.0f,  25.0f,
+      -70, 20.0f,  10.0f,
+      -70, 25.1, 10.0f,0);
 
   // parede embaixo da janela
-  draw_wall(-32, -5,  -25.0f,
-       35, -5,  -25.0f,
-       35, -25, -25.0f,
-      -32, -25, -25.0f,0);
+  draw_wall(-30, -5,  -25.0f,
+       50, -5,  -25.0f,
+       50, -25, -25.0f,
+      -30, -25, -25.0f,0);
 
   //parede em cima da janela
-  draw_wall(-55, 25,  -25.0f,
-       55, 25,  -25.0f,
-       55, 20.5, -25.0f,
-      -55, 20.5, -25.0f,0);
+  draw_wall(-70, 25,  -25.0f,
+       70, 25,  -25.0f,
+       70, 20.5, -25.0f,
+      -70, 20.5, -25.0f,0);
 
 // parede ao lado da porta principal
-	draw_wall(50, 25,  -25.0f,
-			 55, 25,  -25.0f,
-			 55, -25, -25.0f,
-			50, -25, -25.0f,0);
+	draw_wall(65, 25,  -25.0f,
+			 70, 25,  -25.0f,
+			 70, -25, -25.0f,
+			65, -25, -25.0f,0);
 
   //parede ao lado da porta secundaria
-  draw_wall(-55, -25,  -25.0f,
-      -48, -25,  -25.0f,
-      -48, 20.5, -25.0f,
-      -55, 20.5, -25.0f,0);
+  draw_wall(-70, -25,  -25.0f,
+      -63, -25,  -25.0f,
+      -63, 20.5, -25.0f,
+      -70, 20.5, -25.0f,0);
 
   //parede acima das duas portas do fundo
-  draw_wall(55.5, 20.3,  25.0f,
-      -55, 20.3,  25.0f,
-      -55, 25, 25.0f,
-      55.5, 25, 25.0f,0);
+  draw_wall(70.5, 20.3,  25.0f,
+      -70, 20.3,  25.0f,
+      -70, 25, 25.0f,
+      70.5, 25, 25.0f,0);
 
-	//parede entre as duas portas
-  draw_wall(-35, 20.3,  25.0f,
-      12, 20.3,  25.0f,
-      12, -25, 25.0f,
-      -35, -25, 25.0f,0);
-
-	// parede entre a porta coordenacao e a porta ao lado da estante
-	draw_wall(-50, 20.3,  25.0f,
-      -55, 20.3,  25.0f,
-      -55, -25, 25.0f,
+	//parede entre as duas portas 5 e 6
+  draw_wall(-50, 20.3,  25.0f,
+      -17, 20.3,  25.0f,
+      -17, -25, 25.0f,
       -50, -25, 25.0f,0);
 
-  draw_wall(55, 20.5,  25.0f,
-      28, 20.5,  25.0f,
-      28, -24, 25.0f,
-      55, -24, 25.0f,0);
+	draw_wall(23, 20.3,  25.0f,
+      -2, 20.3,  25.0f,
+      -2, -25, 25.0f,
+      23, -25, 25.0f,0);
+
+	// parede entre a porta e a porta ao lado da estante
+	draw_wall(-65, 20.3,  25.0f,
+      -70, 20.3,  25.0f,
+      -70, -25, 25.0f,
+      -65, -25, 25.0f,0);
+
+  draw_wall(70, 20.5,  25.0f,
+      40, 20.5,  25.0f,
+      40, -25, 25.0f,
+      70, -25, 25.0f,0);
 
   //parede em cima das janelas externas
-  draw_wall(55.2f, 25.2, -25.2f,
-      55.2f, 20.5f,  -25.2f,
-      55.2f, 20.5f,  25.0f,
-      55.2f, 25.2, 25.0f,0);
+  draw_wall(70.2f, 25.2, -25.2f,
+      70.2f, 20.5f,  -25.2f,
+      70.2f, 20.5f,  25.0f,
+      70.2f, 25.2, 25.0f,0);
 
-  draw_wall(55.2f, -24, -25.2f,
-      55.2f, 20.5f,  -25.2f,
-      55.2f, 20.5f,  -20.0f,
-      55.2f, -24, -20.0f,0);
+  draw_wall(70.2f, -25, -25.2f,
+      70.2f, 20.5f,  -25.2f,
+      70.2f, 20.5f,  -20.0f,
+      70.2f, -25, -20.0f,0);
 
       //balcao
       int cont, cont1 = 0;
       float zpos=-15;
       glColor3f(1,1,1);
-      draw(25,-10,0,1.5,2.9,9.7,5,0);
+			glPushMatrix();
+				glBindTexture(GL_TEXTURE_2D, texture_id[4]);
+				glNormal3f(0,1,0);
+				glBegin(GL_QUADS);
+					glTexCoord2f(0.0f, 0.0f); glVertex3f( 42,  -5, 25 );
+					glTexCoord2f(0.0f, 1.0f); glVertex3f( 42, -24.5, 25 );
+				  glTexCoord2f(1.0f, 1.0f);	glVertex3f( 42, -24.5, -25 );
+				  glTexCoord2f(1.0f, 0.0f);	glVertex3f( 42, -5, -25 );
+				glEnd();
+
+				glBegin(GL_QUADS);
+					glTexCoord2f(0.0f, 0.0f);glVertex3f( 49,  -5, 25 );
+					glTexCoord2f(0.0f, 1.0f);glVertex3f( 49, -24.5, 25 );
+					glTexCoord2f(1.0f, 1.0f);glVertex3f( 49, -24.5, -25 );
+					glTexCoord2f(1.0f, 0.0f);glVertex3f( 49, -5, -25 );
+				glEnd();
+
+				glBegin(GL_QUADS);
+				  glTexCoord2f(0.0f, 0.0f);	glVertex3f( 42, -5, 25 );
+				  glTexCoord2f(0.0f, 1.0f);	glVertex3f( 50, -5,  25 );
+			    glTexCoord2f(1.0f, 1.0f);		glVertex3f( 50, -5, -25 );
+				  glTexCoord2f(1.0f, 0.0f);	glVertex3f( 42, -5, -25 );
+				glEnd();
+
+				glBindTexture(GL_TEXTURE_2D, 0);
+			glPopMatrix();
+
+			glBindTexture(GL_TEXTURE_2D, texture_id[5]);
+
+			glNormal3f(0,1,0);
+			glBegin(GL_QUADS);
+				glVertex3f( 41.8, -5, 24.7 );
+				glVertex3f( 41.8, -6,  24.7 );
+				glVertex3f( 41.8, -6, -24.7 );
+				glVertex3f( 41.8, -5, -24.7 );
+			glEnd();
+
+			glBegin(GL_QUADS);
+				glVertex3f( 49.5, -14.8, 24.7 );
+				glVertex3f( 49.5, -15,  24.7 );
+				glVertex3f( 49.5, -15, -24.7 );
+				glVertex3f( 49.5, -14.8, -24.7 );
+			glEnd();
+
+			glBegin(GL_QUADS);
+				glVertex3f( 49.5, -5, -1 );
+				glVertex3f( 49.5, -24, -1 );
+				glVertex3f( 49.5, -24, -0.8);
+				glVertex3f( 49.5, -5,  -0.8 );
+			glEnd();
+
       for(cont = 0; cont < 3; cont++, zpos+=15){
-        glColor3f(0.5,0.5,0.5);
-        draw(21,-10,zpos,0.1,2.5,0.1,5,0);
+        draw(41,-14,zpos,0.01,3.5,0.1,5,0);
       }
       zpos= -17;
       for(cont = 1; cont <= 6; cont++){
-        glColor3f(0.5,0.5,0.5);
-        draw(21,-8,zpos,0.1,0.5,0.1,5,0);
+        draw(41,-10,zpos,0.01,0.5,0.1,5,0);
         if(cont%2 == 0){ zpos += 11; }
         else { zpos	+= 4; }
       }
 
+		 glBindTexture(GL_TEXTURE_2D, texture_id[0]);
+
     // estante
-    glColor3f(0.5,0.5,0.5);
+		glBindTexture(GL_TEXTURE_2D, texture_id[6]);
     float ypos = -8;
 
     for(cont = 0; cont < 11; cont ++, ypos += 2){
-      draw(-43.5,ypos, -1, 0.5, 0.1, 3.5, 5, 0);
+      draw(-68,ypos, -3, 0.1, 0.1, 4, 5, 0);
     }
     for(cont1 = 0, ypos=-6; cont1 < 18 ;cont1++, ypos++){
       zpos=7.5;
-      for(cont = 0; cont < 5; cont++,zpos-=4){
-        draw(-43.5, ypos, zpos,0.5, 0.4, 0.006, 5, 0);
+      for(cont = 0; cont < 6; cont++,zpos-=4){
+        draw(-68, ypos, zpos,0.6, 0.4, 0.05, 5, 0);
       }
     }
-
-
-    //tv
-    draw_tv();
-    glColor3f(1,1,1);
-
-    //janelas externas - maiores
-      draw(55,-4,-14, 0.01,8,3,5,1);
-      draw(55,-4,1,   0.01,8,3,5, 1);
-      draw(55,-4,16,  0.01,8,3,5,1);
-
-      //janelas externas - menores
-    draw(23,5.7,-25,2.5,3,0.01,5,1);
-    draw(10,5.8,-25,2.5,3,0.01,5,1);
-    draw(-3,5.8,-25,2.5,3,0.01,5,1);
-    draw(-16,5.8,-25,2.5,3,0.01,5,1);
+		glBindTexture(GL_TEXTURE_2D, texture_id[0]);
 
     // porta principal
     glPushMatrix();
       //glColor3f(1,0,0);
-      glTranslatef(50,-6,-25);
+      glTranslatef(65,-6,-25);
       glRotated((GLfloat)door_angle,0,-1,0);
-      //draw(-7,0,0,3,7.5,0.01,5,0);
-			draw_door(-15, -19,  0,
-		            0,  -19,   0,
-		            0,   20,   0,
-		            -15, 20,  0,2);
+			draw_door(0, -19,  0,
+		            -15,  -19,   0,
+		            -15,   20,   0,
+		            0, 20,  0,2);
     glPopMatrix();
 
-	// porta ao lado da estante
-	draw_door(-55, -25, 10.0f,
-            -55,  15,  10,
-    	 	    -55,  15,  25.0f,
-      		  -55, -25,  25.0f,3);
+	// porta 3
+	draw_door(-70, -25, 10.0f,
+            -70,  15,  10,
+    	 	    -70,  15,  25.0f,
+      		  -70, -25,  25.0f,3);
 
-	//porta coordenacao
-	 draw_door(-35,  -25,25,
-						-50,  -25, 25,
-						-50,   15, 25,
-						-35,   15, 25,2);
+	//porta 4
+	 draw_door(-50,  -25,25,
+						-65,  -25, 25,
+						-65,   15, 25,
+						-50,   15, 25,2);
 
-	//porta diretor
-	 draw_door(12,  -25,25,
-						28,  -25, 25,
-						28,   15, 25,
-						12,   15, 25,2);
+	//porta 5
+	 draw_door(23,  -25,25,
+						40,  -25, 25,
+						40,   15, 25,
+						23,   15, 25,2);
 
-		// porta secundaria
-		draw_door(-32,  -25, -25,
-							-48,  -25, -25,
-							-48,   15, -25,
-							-32,   15, -25,2);
+	//porta 6
+	 draw_door(-17,  -25,25,
+						-2,  -25, 25,
+						-2,   15, 25,
+						-17,   15, 25,2);
 
-  //  draw(-30,-2,-25,3.2,6,0.01,5,0);
+		// porta 2
+		draw_door(-47,  -25, -25,
+							-63,  -25, -25,
+							-63,   15, -25,
+							-47,   15, -25,2);
 
     //biros
     glColor3f(1,1,1);
@@ -289,13 +406,13 @@ void display(){
     // RELOGIO
     GLUquadricObj *quadric = gluNewQuadric();
     glPushMatrix();
-      glTranslatef(-4,10,24.2);
+      glTranslatef(10,10,24.2);
       gluCylinder(quadric, 2, 2, 0.7, 12, 3);
     glPopMatrix();
 
-      draw(-4,10.8,24.2,0.07,0.4,0.01,5,0);
+      draw(10,10.8,24.2,0.07,0.4,0.01,5,0);
       glPushMatrix();
-        glTranslatef(-3.65,9.2,24.2);
+        glTranslatef(10.5,9.2,24.2);
         glRotated(45,0,0,1);
         draw(0,0,0,0.07,0.3,0.1,5,0);
       glPopMatrix();
@@ -360,7 +477,133 @@ void display(){
       glRotated(90,0,1,0);
     glPopMatrix();
 
-    glColor3f(1,1,1);
+
+		//tv
+		draw_tv();
+
+
+		//janelas maiores
+		draw_windows(70,20,25,
+								 70,10,25,
+								 70,10,10,
+								 70,20,10);
+
+	 draw_windows(70,20,9.5,
+								70,10,9.5,
+								70,10,-4.5,
+								70,20,-4.5);
+
+	 draw_windows(70,20,-5,
+								 70,10,-5,
+								 70,10,-20,
+								 70,20,-20);
+
+		 draw_windows(70,9.5,  25,
+									70,-24.5,25,
+									70,-24.5,10,
+									70,9.5,  10);
+
+		draw_windows(70,9.5,  9.5,
+								 70,-24.5,9.5,
+								 70,-24.5, -4.5,
+								 70,9.5, -4.5);
+
+		draw_windows(70,9.5,-5,
+									70,-24.5,-5,
+									70,-24.5,-20,
+									70,9.5,-20);
+
+		//janelas menores
+		draw_windows( 49.5,-5,-25,
+									49.5, 14 ,-25,
+									29,14,-25,
+									29,-5  ,-25);
+
+			draw_windows( 28.5,-5,-25,
+										28.5, 14 ,-25,
+										10,14,-25,
+										10,-5  ,-25);
+
+			draw_windows( 9.5,-5,-25,
+										9.5, 14 ,-25,
+										-9,14,-25,
+										-9,-5  ,-25);
+
+			draw_windows( -10,-5,-25,
+										-10, 14 ,-25,
+										-30,14,-25,
+										-30,-5  ,-25);
+
+			//janelas menores, acima das portas
+			draw_windows( 64,20,-25,
+										64, 14.5 ,-25,
+										50,14.5,-25,
+										50,20  ,-25);
+
+			draw_windows( 49.5,20,-25,
+										49.5, 14.5 ,-25,
+										29,14.5,-25,
+										29,20  ,-25);
+
+			draw_windows( 28.5,20,-25,
+										28.5, 14.5 ,-25,
+										10,14.5,-25,
+										10, 20  ,-25);
+
+			draw_windows( 9.5,20,-25,
+										9.5, 14.5 ,-25,
+										-9,14.5,-25,
+										-9,20  ,-25);
+
+			draw_windows( -10,20,-25,
+										-10, 14.5 ,-25,
+										-30,14.5,-25,
+										-30,20  ,-25);
+
+			draw_windows( -46.5,20,-25,
+										-46.5, 15 ,-25,
+										-63,15,-25,
+										-63,20  ,-25);
+
+			draw_windows( -50,20,  25,
+										-50, 15 ,25,
+										-65,15,    25,
+										-65,20  ,25);
+
+			draw_windows( -17,20,  25,
+										-17, 15 ,25,
+										 -2,15,    25,
+										 -2,20  ,25);
+
+			draw_windows( 23,20,  25,
+										23, 15 ,25,
+										40,15,    25,
+										40,20  ,25);
+
+			draw_windows( -70,20,  25,
+										-70, 15 ,25,
+										-70,15,    10,
+										-70,20  ,10);
+
+			draw_windows( -31,20,  -25,
+										-31, 15 ,-25,
+										-39,15,  -25,
+										-39,20  ,-25);
+
+			draw_windows( -40,20,  -25,
+										-40, 15 ,-25,
+										-46,15,  -25,
+										-46,20  ,-25);
+
+			draw_windows( -31,14,  -25,
+										-31, -25 ,-25,
+										-39,-25,  -25,
+										-39,14  ,-25);
+
+			draw_windows( -40,14,  -25,
+										-40, -25 ,-25,
+										-46,-25,  -25,
+										-46,14  ,-25);
 
   glutSwapBuffers();
 }
@@ -433,6 +676,48 @@ void init_textures(){
 		loadTextureFromFile("textures/FloorTiles2.jpg",1);
 		loadTextureFromFile("textures/texture_door.jpg",2);
 		loadTextureFromFile("textures/texture_door1.jpg",3);
+		loadTextureFromFile("textures/balcao.jpg",4);
+		loadTextureFromFile("textures/balcao2.jpg",5);
+		loadTextureFromFile("textures/estante.jpg",6);
+
+}
+
+void init_lighting(){
+
+		//Habilita o uso de iluminação
+		glEnable(GL_LIGHTING);
+		glEnable(GL_BLEND);
+	 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		// Habilita o modelo de colorização de Gouraud
+		glShadeModel(GL_SMOOTH);
+		// Define a refletância do material
+		glMaterialfv(GL_FRONT,GL_SPECULAR, especularidade);
+		// Define a concentração do brilho
+		glMateriali(GL_FRONT,GL_SHININESS,especMaterial);
+
+		glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+
+		glLightfv(GL_LIGHT0, GL_AMBIENT, luz_ambiente);
+	  glLightfv(GL_LIGHT0, GL_DIFFUSE, cor_luz1);
+		glLightfv(GL_LIGHT0, GL_SPECULAR, cor_luz1);
+		glLightfv(GL_LIGHT0, GL_POSITION, posicao_luz0 );
+		glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, direcao_luz1);
+		glLightfv(GL_LIGHT0, GL_SPOT_EXPONENT, spot_brilho);
+		glLightf (GL_LIGHT0, GL_SPOT_CUTOFF, spot_luz1);
+
+		glLightfv(GL_LIGHT1, GL_DIFFUSE, cor_luz1 );
+		glLightfv(GL_LIGHT1, GL_SPECULAR, cor_luz1);
+		glLightfv(GL_LIGHT1, GL_POSITION, posicao_luz1 );
+		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direcao_luz1);
+		glLightfv(GL_LIGHT1, GL_SPOT_EXPONENT, spot_brilho);
+		glLightf (GL_LIGHT1, GL_SPOT_CUTOFF, spot_luz1);
+
+		// Habilita a definição da cor do material a partir da cor corrente
+		glEnable(GL_COLOR_MATERIAL);
+		// Habilita a luz de número 0
+		glEnable(GL_LIGHT0);
+		// Habilita a luz de número 1
+		glEnable(GL_LIGHT1);
 
 }
 

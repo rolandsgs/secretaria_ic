@@ -4,7 +4,7 @@
 #include <math.h>
 #include <SOIL.h>
 #define PI 3.1415
-#define NUM_TEX 2
+#define NUM_TEX 7
 
 void draw_wall(float x1,float y1, float z1,
 			float x2, float y2, float z2,
@@ -16,3 +16,4 @@ void keyboard(unsigned char key, int x, int y);
 void special(int key, int x, int y);
 void init_textures();
 void loadTextureFromFile(char *filename,int index);
+void init_lighting();
