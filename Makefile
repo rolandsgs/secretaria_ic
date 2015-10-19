@@ -1,7 +1,19 @@
 CC = gcc
-LIBS = -lglu32 -lSOIL -lOpenGL32 -lfreeglut
+LIBS = -lGLU -lSOIL -lGL -lglut -lm
+MKDIR_P = mkdir -p
+OBJ_DIR := obj/
+BIN_DIR := bin/
 
-all: secretaria
+.PHONY: directories
+all: directories secretaria
+
+directories: ${OBJ_DIR} ${BIN_DIR}
+
+${OBJ_DIR}:
+	${MKDIR_P} ${OBJ_DIR}
+
+${BIN_DIR}:
+	${MKDIR_P} ${BIN_DIR}
 
 secretaria: display
 	$(CC) src/main.c obj/display.o $(LIBS) -o bin/secretaria  
