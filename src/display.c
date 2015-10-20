@@ -409,7 +409,7 @@ void display()
     cam[2]=raioxz*sin(2*PI*tetaxz/360);
     gluLookAt(cam[0],cam[1],cam[2],center[0],center[1],center[2],0.0,1.0,0.0);
 
-	//init_lighting();
+	init_lighting();
 
 	draw_objects();
 	draw_windows();
@@ -501,6 +501,7 @@ void init_lighting(){
 		glEnable(GL_BLEND);
 	 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		// Habilita o modelo de colorização de Gouraud
+		glEnable(GL_NORMALIZE); 
 		glShadeModel(GL_SMOOTH);
 		// Define a refletância do material
 		glMaterialfv(GL_FRONT,GL_SPECULAR, especularidade);
