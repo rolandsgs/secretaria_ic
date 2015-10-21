@@ -65,9 +65,13 @@ void draw_cube(float xpos, float ypos, float zpos,
 	    if(wire) glutWireCube (tam);
 	    else glutSolidCube(tam);
     glPopMatrix();
-    glDisable(GL_TEXTURE_GEN_S);
-    glDisable(GL_TEXTURE_GEN_T);
-
+	if(tex_index != NOTTEX)
+    {
+        glDisable(GL_TEXTURE_GEN_S);
+    	glDisable(GL_TEXTURE_GEN_T);
+		glBindTexture(GL_TEXTURE_2D, 0);
+    }
+    
 }
 
 void draw_windows()
@@ -119,13 +123,31 @@ void draw_objects()
     glMaterialfv(GL_FRONT, GL_EMISSION, sem_cor);
 
     // TV
+	glColor3f(0,0,0);
     draw_cube(58, 8, 24.7, 0.08, 2, 3.3, 0, 1, 0, 90, 5, 0, NOTTEX);
     draw_cube(58, 8, 24.5, 0.08, 1.8, 3, 0, 1, 0, 90, 5, 0, NOTTEX);
+	
+	// RELOGIO
+	// circunferencia
+    GLUquadricObj *quadric = gluNewQuadric();
+    glPushMatrix();
+      glTranslatef(10,10,24.2);
+      gluCylinder(quadric, 2, 2, 0.7, 12, 3);
+    glPopMatrix();
+	//ponteiros
+	  draw_cube(9.9,10.8,24.2,0.07,0.4,0.01,0,0,0,0, 5,0, NOTTEX);
+	  glPushMatrix();
+		glTranslatef(10.5,9.2,24.2);
+		glRotated(45,0,0,1);
+		draw_cube(0,0,0,0.07,0.3,0.1,0,0,0,0,5,0,NOTTEX);
+	  glPopMatrix();
+
 
 
     // marmore embaixo das janelas
+	glColor3f(0.5,0.5,0.5);
     draw_cube(6, -5.3, -23.55, 7.2, 0.05, 0.29, 0, 0, 0, 0 , 10, 0, 7);
-
+	
     //biros
     //biro 1
     glColor3f(1,1,1);
@@ -257,7 +279,7 @@ void draw_objects()
         glRotated(90,0,1,0);
     glPopMatrix();
 
-
+	glBindTexture(GL_TEXTURE_2D, 0);
     //BALCÃO
     glColor3f(1,1,1);
         glPushMatrix();
@@ -312,17 +334,18 @@ void draw_objects()
         glEnd();
 
       for(cont = 0; cont < 3; cont++, zpos+=15){
-        draw_cube(41,-14,zpos,0.01,3.5,0.1, 0, 0, 0, 0, 5,0, NUM_TEX);
+        draw_cube(41,-14,zpos,0.01,3.5,0.1, 0, 0, 0, 0, 5,0, NOTTEX);
       }
       zpos= -17;
       for(cont = 1; cont <= 6; cont++){
-        draw_cube(41,-10,zpos,0.01,0.5,0.1, 0, 0, 0, 0, 5,0, NUM_TEX);
+        draw_cube(41,-10,zpos,0.01,0.5,0.1, 0, 0, 0, 0, 5,0, NOTTEX);
         if(cont%2 == 0){ zpos += 11; }
         else { zpos	+= 4; }
       }
 
     // estante
-    glBindTexture(GL_TEXTURE_2D, texture_id[6]);
+	
+    //glBindTexture(GL_TEXTURE_2D, texture_id[6]);
     float ypos = -8;
 
     for(cont = 0; cont < 11; cont ++, ypos += 2){
@@ -334,7 +357,7 @@ void draw_objects()
         draw_cube(-68, ypos, zpos,0.6, 0.4, 0.05, 0, 0, 0, 0, 5, 0, NOTTEX);
       }
     }
-    glBindTexture(GL_TEXTURE_2D, texture_id[0]);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
 }
 void draw_walls()
@@ -344,12 +367,15 @@ void draw_walls()
 
     //TETO
     draw_quads(-70,25,-25, -70,25,25, 70,25,25, 70,25,-25,0);
-    // divisoria do teto
-    //draw_cube(-17, 25, -19, 1, 10, 10, 3, 0);
-    draw_quads(-17,25,-25, -17,25,   25, -17,21,   25, -17,21,-25,0);
-	draw_quads(-19,21,-25, -19, 21,  25, -19, 25,  25, -19, 25, -25,0);
-    draw_quads(-17, 21,-25, -17, 21,  25, -19,21,  25, -19,21, -25,0);
-    //chao
+   	/*
+	// divisoria do teto
+    
+    draw_quads(-17,25,-25, -17,25,   25, -17,21,   25, -17,21,-25,1);
+	draw_quads(-19,21,-25, -19, 21,  25, -19, 25,  25, -19, 25, -25,1);
+    draw_quads(-17, 21,-25, -17, 21,  25, -19,21,  25, -19,21, -25,1);
+    */
+
+	//chao
     draw_quads(-70.0f, -25, -25.0f, -70.0f, -25,  25.0f, 70.0f, -25,  25.0f, 70.0f, -25, -25.0f,1);
     //parede atras da estante
     draw_quads(-70, -25, 10.0f, -70, 25.1f,  10.0f, -70, 25.1f,  -25.0f, -70, -25, -25.0f,0);
@@ -484,13 +510,14 @@ void keyboard(unsigned char key, int x, int y){
 void init_textures(){
 
 		loadTextureFromFile("textures/wall.jpg",0);
-		loadTextureFromFile("textures/FloorTiles2.jpg",1);
+		loadTextureFromFile("textures/piso.jpg",1);
 		loadTextureFromFile("textures/texture_door.jpg",2);
 		loadTextureFromFile("textures/texture_door1.jpg",3);
 		loadTextureFromFile("textures/balcao.jpg",4);
 		loadTextureFromFile("textures/balcao2.jpg",5);
 		loadTextureFromFile("textures/estante.jpg",6);
         loadTextureFromFile("textures/marmore.jpg",7);
+		loadTextureFromFile("textures/tv.png",8);
 
 }
 
