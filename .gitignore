@@ -1,0 +1,6 @@
+*~
+.*
+
+
+# Accept these files in the repository
+!.gitignore
