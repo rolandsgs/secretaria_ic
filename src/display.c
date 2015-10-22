@@ -56,6 +56,7 @@ void draw_cube(float xpos, float ypos, float zpos,
         {
             glEnable(GL_TEXTURE_GEN_S);
             glEnable(GL_TEXTURE_GEN_T);
+
             glBindTexture(GL_TEXTURE_2D, texture_id[tex_index]);
         }
         glNormal3f(0,1,0);
@@ -68,10 +69,10 @@ void draw_cube(float xpos, float ypos, float zpos,
 	if(tex_index != NOTTEX)
     {
         glDisable(GL_TEXTURE_GEN_S);
-    	glDisable(GL_TEXTURE_GEN_T);
+       	glDisable(GL_TEXTURE_GEN_T);
 		glBindTexture(GL_TEXTURE_2D, 0);
     }
-    
+
 }
 
 void draw_windows()
@@ -126,9 +127,16 @@ void draw_objects()
 	glColor3f(0,0,0);
     draw_cube(58, 8, 24.7, 0.08, 2, 3.3, 0, 1, 0, 90, 5, 0, NOTTEX);
     draw_cube(58, 8, 24.5, 0.08, 1.8, 3, 0, 1, 0, 90, 5, 0, NOTTEX);
-	
+		glColor3f(1,1,1);
+		draw_quads(66, 12, 24,
+			 				 50, 12 , 24,
+							 50, 4, 24,
+							 66, 4, 24, 13); // GABINETE
+
+
 	// RELOGIO
 	// circunferencia
+	glColor3f(0,0,0);
     GLUquadricObj *quadric = gluNewQuadric();
     glPushMatrix();
       glTranslatef(10,10,24.2);
@@ -147,7 +155,7 @@ void draw_objects()
     // marmore embaixo das janelas
 	glColor3f(0.5,0.5,0.5);
     draw_cube(6, -5.3, -23.55, 7.2, 0.05, 0.29, 0, 0, 0, 0 , 10, 0, 7);
-	
+
     //biros
     //biro 1
     glColor3f(1,1,1);
@@ -220,8 +228,13 @@ void draw_objects()
     draw_cube(17.5, -5, 13, 0.09, 1, 1.2 , 0, 0, 0, 0, 4, 0, NOTTEX);      //TELA
     glColor3f(0,0,0);
     draw_cube(18, -5.2, 13, 0.09, 0.95, 1.1, 0, 0, 0, 0, 5, 0, NOTTEX);    //TELA
-    draw_cube(15, -7, 19, 1.5, 1, 0.5, 0, 0, 0, 0, 5, 0, NOTTEX);          //CPU
+		glColor3f(1,1,1);
+		draw_quads(17.3, -3, 15.5, 17.3, -3 , 10.5,	17.3, -7, 10.5,	17.3	, -7, 15.5, 10);   //MONITOR
+		draw_quads(11, -4.5, 20, 11, -4.5 , 18,	11, -9.5, 18,	11, -9.5, 20, 12); // GABINETE
     draw_cube(13.8, -9.5, 13, 0.5, 0.05, 1.2, 0, 0, 0, 0, 5, 0, NOTTEX);   //TECLADO
+		draw_quads(15, -9.2, 16, 15, -9.2 , 9, 12, -9.2, 9, 12, -9.2, 16, 9);   //TECLADO
+		glColor3f(0,0,0);
+		draw_cube(15, -7, 19, 1.5, 1, 0.5, 0, 0, 0, 0, 5, 0, NOTTEX);          //CPU
     draw_cube(17.5, -9.5, 13, 0.7, 0.09, 0.7, 0, 0, 0, 0, 5, 0, NOTTEX);   //BASE
     draw_cube(18, -7, 13, 0.1, 1, 0.2, 0, 0, 0, 0, 5, 0, NOTTEX);          // BASE
     glPushMatrix(); //MOUSE
@@ -236,8 +249,13 @@ void draw_objects()
     draw_cube(-22.5, -5, 13, 0.09, 1, 1.2 , 0, 0, 0, 0, 4, 0, NOTTEX);     //TELA
     glColor3f(0,0,0);
     draw_cube(-22, -5.2, 13, 0.09, 0.95, 1.1, 0, 0, 0, 0, 5, 0, NOTTEX);   //TELA
-    draw_cube(-25, -7, 19, 1.5, 1, 0.5, 0, 0, 0, 0, 5, 0, NOTTEX);         //CPU
+		glColor3f(1,1,1);
+		draw_quads(-22.8, -3, 15.5, -22.8, -3 , 10.5, -22.8, -7, 10.5, -22.8, -7, 15.5, 10);   //MONITOR
+		draw_quads(-28.8, -4.5, 20, -28.8, -4.5 , 18,	-28.8, -9.5, 18,	-28.8, -9.5, 20, 12); // GABINETE
     draw_cube(-25.8, -9.5, 13, 0.5, 0.05, 1.2, 0, 0, 0, 0, 5, 0, NOTTEX);  //TECLADO
+		draw_quads(-24.5, -9.2, 16, -24.5, -9.2 , 9, -27.5, -9.2, 9, -27.5, -9.2, 16, 9);   //TECLADO
+		glColor3f(0,0,0);
+		draw_cube(-25, -7, 19, 1.5, 1, 0.5, 0, 0, 0, 0, 5, 0, NOTTEX);         //CPU
     draw_cube(-22.5, -9.5, 13, 0.7, 0.09, 0.7, 0, 0, 0, 0, 5, 0, NOTTEX);  //BASE
     draw_cube(-22, -7, 13, 0.1, 1, 0.2, 0, 0, 0, 0, 5, 0, NOTTEX);         //BASE
     glPushMatrix(); //MOUSE
@@ -252,8 +270,13 @@ void draw_objects()
     draw_cube(17.5, -5, -13, 0.09, 1, 1.2 , 0, 0, 0, 0, 4, 0, NOTTEX);          //TELA
     glColor3f(0,0,0);
     draw_cube(18, -5.2, -13, 0.09, 0.95, 1.1, 0, 0, 0, 0, 5, 0, NOTTEX);      //TELA
-    draw_cube(15, -7, -19, 1.5, 1, 0.5, 0, 0, 0, 0, 5, 0, NOTTEX);           //CPU
+		glColor3f(1,1,1);
+		draw_quads(17.3, -3, -15.5, 17.3, -3 , -10.5,	17.3, -7, -10.5, 17.3, -7, -15.5, 11);   //MONITOR
+		draw_quads(11, -4.5, -20, 11, -4.5 , -18,	11, -9.5, -18,	11, -9.5, -20, 12); // GABINETE
     draw_cube(13.8, -9.5, -13, 0.5, 0.05, 1.2, 0, 0, 0, 0, 5, 0, NOTTEX);      // TECLADO
+		draw_quads(15, -9.2, -17, 15, -9.2 , -10, 12, -9.2, -10, 12, -9.2, -17, 9);   //TECLADO
+		glColor3f(0,0,0);
+		draw_cube(15, -7, -19, 1.5, 1, 0.5, 0, 0, 0, 0, 5, 0, NOTTEX);           //CPU
     draw_cube(17.5, -9.5, -13, 0.7, 0.09, 0.7, 0, 0, 0, 0, 5, 0, NOTTEX);       //BASE
     draw_cube(18, -7, -13, 0.1, 1, 0.2, 0, 0, 0, 0, 5, 0, NOTTEX);          // BASE
     glPushMatrix(); //MOUSE
@@ -268,8 +291,15 @@ void draw_objects()
     draw_cube(-22.5, -5, -13, 0.09, 1, 1.2 , 0, 0, 0, 0, 4, 0, NOTTEX);          //TELA
     glColor3f(0,0,0);
     draw_cube(-22, -5.2, -13, 0.09, 0.95, 1.1, 0, 0, 0, 0, 5, 0, NOTTEX);      //TELA
-    draw_cube(-25, -7, -19, 1.5, 1, 0.5, 0, 0, 0, 0, 5, 0, NOTTEX);           //CPU
+		glColor3f(1,1,1);
+		draw_quads(-22.8, -3, -15.5, -22.8, -3 , -10.5, -22.8, -7, -10.5, -22.8, -7, -15.5, 11);   //MONITOR
+
+		draw_quads(-28.8, -4.5, -20, -28.8, -4.5 , -18,	-28.8, -9.5, -18,	-28.8, -9.5, -20, 12); // GABINETE
+
     draw_cube(-25.8, -9.5, -13, 0.5, 0.05, 1.2, 0, 0, 0, 0, 5, 0, NOTTEX);      // TECLADO
+		draw_quads(-24.5, -9.2, -17, -24.5, -9.2 , -10, -27.5, -9.2, -10, -27.5, -9.2, -17, 9);   //TECLADO
+		glColor3f(0,0,0);
+		draw_cube(-25, -7, -19, 1.5, 1, 0.5, 0, 0, 0, 0, 5, 0, NOTTEX);           //CPU
     draw_cube(-22.5, -9.5, -13, 0.7, 0.09, 0.7, 0, 0, 0, 0, 5, 0, NOTTEX);       //BASE
     draw_cube(-22, -7, -13, 0.1, 1, 0.2, 0, 0, 0, 0, 5, 0, NOTTEX);          // BASE
     glPushMatrix(); //MOUSE
@@ -344,11 +374,8 @@ void draw_objects()
       }
 
     // estante
-	
-    //glBindTexture(GL_TEXTURE_2D, texture_id[6]);
-    float ypos = -8;
-
-    for(cont = 0; cont < 11; cont ++, ypos += 2){
+   float ypos = -7;
+    for(cont = 0; cont < 11; cont ++, ypos += 1.9){
       draw_cube(-68,ypos, -3, 0.1, 0.1, 4, 0, 0, 0, 0, 5, 0, NOTTEX);
     }
     for(cont1 = 0, ypos=-6; cont1 < 18 ;cont1++, ypos++){
@@ -357,6 +384,8 @@ void draw_objects()
         draw_cube(-68, ypos, zpos,0.6, 0.4, 0.05, 0, 0, 0, 0, 5, 0, NOTTEX);
       }
     }
+		glColor3f(0.5,0.5,0.5);
+		draw_quads(-69, -7, -13, -69, -7 , 8, -69, 13,  8, -69, 13,  -13, NOTTEX);   //Fundo estante
     glBindTexture(GL_TEXTURE_2D, 0);
 
 }
@@ -367,13 +396,13 @@ void draw_walls()
 
     //TETO
     draw_quads(-70,25,-25, -70,25,25, 70,25,25, 70,25,-25,0);
-   	/*
+
+		/*
 	// divisoria do teto
-    
-    draw_quads(-17,25,-25, -17,25,   25, -17,21,   25, -17,21,-25,1);
-	draw_quads(-19,21,-25, -19, 21,  25, -19, 25,  25, -19, 25, -25,1);
-    draw_quads(-17, 21,-25, -17, 21,  25, -19,21,  25, -19,21, -25,1);
-    */
+    draw_quads(-17,25,-25, -17,25,   25, -17,21,   25, -17,21,-25, NOTTEX);
+	  draw_quads(-19,21,-25, -19, 21,  25, -19, 25,  25, -19, 25, -25,NOTTEX);
+    draw_quads(-17, 21,-25, -17, 21,  25, -19,21,  25, -19,21, -25,NOTTEX);
+		*/
 
 	//chao
     draw_quads(-70.0f, -25, -25.0f, -70.0f, -25,  25.0f, 70.0f, -25,  25.0f, 70.0f, -25, -25.0f,1);
@@ -438,11 +467,11 @@ void display()
 	init_lighting();
 
 	draw_objects();
+  draw_walls();
+  draw_doors();
 	draw_windows();
-    draw_walls();
-    draw_doors();
 
-    glutSwapBuffers();
+  glutSwapBuffers();
 }
 
 void special(int key, int x, int y){
@@ -516,8 +545,13 @@ void init_textures(){
 		loadTextureFromFile("textures/balcao.jpg",4);
 		loadTextureFromFile("textures/balcao2.jpg",5);
 		loadTextureFromFile("textures/estante.jpg",6);
-        loadTextureFromFile("textures/marmore.jpg",7);
+    loadTextureFromFile("textures/marmore.jpg",7);
 		loadTextureFromFile("textures/tv.png",8);
+		loadTextureFromFile("textures/teclado.jpg",9);
+		loadTextureFromFile("textures/windows.jpg",10);
+		loadTextureFromFile("textures/linux.jpg",11);
+		loadTextureFromFile("textures/cpu.jpg",12);
+		loadTextureFromFile("textures/tv.png",13);
 
 }
 
@@ -528,7 +562,7 @@ void init_lighting(){
 		glEnable(GL_BLEND);
 	 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		// Habilita o modelo de colorização de Gouraud
-		glEnable(GL_NORMALIZE); 
+		glEnable(GL_NORMALIZE);
 		glShadeModel(GL_SMOOTH);
 		// Define a refletância do material
 		glMaterialfv(GL_FRONT,GL_SPECULAR, especularidade);
